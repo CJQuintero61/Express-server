@@ -54,19 +54,22 @@ router.post('/', (req, res) => {
 
 /*
   PUT /api/resources/:id
-  updates an existing task by id
+  replaces an existing task by id
 */
 router.put('/:id', (req, res) => {
-  // find the index of the item to update to update
+  // check for empy body
+  if (!req.body) {
+    return res.status(400).json({ error: "Request body is required" })
+  }
+
+  // find the index of the item to update
   const idx = tasks.findIndex(t => t.id === req.params.id)
   if (idx === -1) {
     return res.status(404).json({ error: 'Task not found' })
   }
 
   // update the task
-  // this keeps existing fields that weren't provided, and only overwrites
-  // fields that were given. The id stays the same
-  tasks[idx] = { ...tasks[idx], ...req.body, id: req.params.id }
+  tasks[idx] = { ...req.body, id: req.params.id }
 
   // send the updated task
   res.json(tasks[idx])
