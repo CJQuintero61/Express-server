@@ -13,7 +13,7 @@ app.use('/api', apiRouter) // for all /api endpoints
 
 // the default endpoint
 app.get('/', (req, res) => {
-  res.send("hello world")
+  res.json("hello world")
 })
 
 export default app

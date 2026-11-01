@@ -9,7 +9,7 @@ import { randomUUID } from 'crypto' // for random ID generation
 const router = Router()
 
 // in memory data that resets when the server restarts
-let tasks = []
+const tasks = []
 
 /*
   GET /api/resources/
@@ -66,7 +66,7 @@ router.put('/:id', (req, res) => {
   // update the task
   // this keeps existing fields that weren't provided, and only overwrites
   // fields that were given. The id stays the same
-  tasks[idx] = { ...tasks[index], ...req.body, id: req.params.id }
+  tasks[idx] = { ...tasks[idx], ...req.body, id: req.params.id }
 
   // send the updated task
   res.json(tasks[idx])
