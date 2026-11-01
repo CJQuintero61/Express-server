@@ -11,31 +11,37 @@ const router = Router()
 // in memory data that resets when the server restarts
 const tasks = [
   {
-    "title": "Buy groceries",
-    "completed": false,
-    "priority": "medium"
+    id: '1',
+    title: 'Buy groceries',
+    completed: false,
+    priority: 'medium'
   },
   {
-    "title": "Finish Express assignment",
-    "completed": false,
-    "priority": "high"
+    id: '2',
+    title: 'Finish Express assignment',
+    completed: false,
+    priority: 'high'
   },
   {
-    "title": "Walk the dog",
-    "completed": true,
-    "priority": "low"
+    id: '3',
+    title: 'Walk the dog',
+    completed: true,
+    priority: 'low'
   },
   {
-    "title": "Call the dentist",
-    "completed": false,
-    "priority": "medium"
+    id: '4',
+    title: 'Call the dentist',
+    completed: false,
+    priority: 'medium'
   },
   {
-    "title": "Clean the kitchen",
-    "completed": false,
-    "priority": "low"
+    id: '5',
+    title: 'Clean the kitchen',
+    completed: false,
+    priority: 'low'
   }
 ]
+
 
 /*
   GET /api/resources/
