@@ -9,7 +9,33 @@ import { randomUUID } from 'crypto' // for random ID generation
 const router = Router()
 
 // in memory data that resets when the server restarts
-const tasks = []
+const tasks = [
+  {
+    "title": "Buy groceries",
+    "completed": false,
+    "priority": "medium"
+  },
+  {
+    "title": "Finish Express assignment",
+    "completed": false,
+    "priority": "high"
+  },
+  {
+    "title": "Walk the dog",
+    "completed": true,
+    "priority": "low"
+  },
+  {
+    "title": "Call the dentist",
+    "completed": false,
+    "priority": "medium"
+  },
+  {
+    "title": "Clean the kitchen",
+    "completed": false,
+    "priority": "low"
+  }
+]
 
 /*
   GET /api/resources/
