@@ -3,9 +3,9 @@
 
   the main script for the api and endpoints
 */
-import router from './routes/api-router'
+import apiRouter from './routes/api-router.js'
+import express from 'express'
 
-const express = require('express')
 const app = express()
 
 app.use(express.json()) // needed to read json
@@ -16,4 +16,4 @@ app.get('/', (req, res) => {
   res.send("hello world")
 })
 
-module.exports = app
+export default app

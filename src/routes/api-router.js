@@ -4,7 +4,7 @@
   the router for all /api endpoints
 */
 import { Router } from 'express'
-import resourcesRouter from './resources-router'
+import resourcesRouter from './resources-router.js'
 
 const router = Router()
 
@@ -13,4 +13,4 @@ const router = Router()
 // by using the resources router
 router.use('/resources', resourcesRouter)
 
-module.exports = router
+export default router

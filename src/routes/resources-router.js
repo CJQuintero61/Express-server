@@ -88,4 +88,4 @@ router.delete('/:id', (req, res) => {
   res.json(deleted)
 })
 
-module.exports = router
+export default router
