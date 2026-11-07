@@ -12,7 +12,7 @@ try {
   /*
     create the tasks table
 
-    tasks are created with their completed status set to false
+    completed defaults to false
     and priorities are optional, so they are nullable
   */
   await pool.query(`

@@ -5,18 +5,9 @@
   wiring, see app.js
 */
 import app from './app.js'
-import { initDb } from './db/init.js'
 
 const port = 3000
 
-// TODO: fix this since initDb is async 
-try {
-  app.listen(port, () => {
-  initDb()
+app.listen(port, () => {
   console.log(`Listening on http://localhost:${port}`)
 })
-}
-catch (err) {
-  console.error("database setup failed:", err.message)
-  process.exit(1)
-}
