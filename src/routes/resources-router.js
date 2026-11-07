@@ -9,6 +9,17 @@ import { pool } from '../db/index.js'
 const router = Router()
 
 /*
+  helper function to parse the id from the url
+
+  id's must be positive non-zero integers,
+  else set to null
+*/
+function parseId(id) {
+  const n = Number(id)
+  return Number.isInteger(n) && n > 0 ? n : null
+}
+
+/*
   GET /api/resources/
   returns all items currently in the tasks table
 */
@@ -27,8 +38,11 @@ router.get('/', async (req, res) => {
   returns a specific item by id, or 404 if not found
 */
 router.get('/:id', async (req, res) => {
-  // get the id field from the quest
-  const id = req.params.id
+  // get the id field from the request
+  const id = parseId(req.params.id)
+  if (!id) {
+    return res.status(404).json({ error: "Task not found" })
+  }
 
   // fetch
   const { rows } = await pool.query(
@@ -46,57 +60,82 @@ router.get('/:id', async (req, res) => {
 
 /*
   POST /api/resources/
-  adds an item to the tasks list
+  adds an entry to the tasks table
 */
-router.post('/', (req, res) => {
-  // check for empty body
-  if (!req.body) {
-    return res.status(400).json({ error: 'Request body is required' })
+router.post('/', async (req, res) => {
+  // extract column data from request
+  const { title, completed = false, priority = null } = req.body ?? {}
+
+  // check for empty title
+  if (!title) {
+    return res.status(400).json({ error: 'Task title is required' })
   }
-  
-  // make the new task with the input data and a randomly generated ID
-  const newTask = { ...req.body, id: randomUUID() }
-  tasks.push(newTask)           // add to the list
-  res.status(201).json(newTask) // created successfully
+
+  // perform the insert and return what was inserted
+  const { rows } = await pool.query(
+    `INSERT INTO tasks (title, completed, priority) VALUES ($1, $2, $3) RETURNING *`,
+    [title, completed, priority]
+  )
+
+  // created successfully
+  res.status(201).json(rows[0])
 })
 
 /*
   PUT /api/resources/:id
   replaces an existing task by id
 */
-router.put('/:id', (req, res) => {
-  // check for empy body
-  if (!req.body) {
-    return res.status(400).json({ error: "Request body is required" })
+router.put('/:id', async (req, res) => {
+  // get id and check
+  const id = parseId(req.params.id)
+  if (!id) {
+    return res.status(404).json({ error: "Task not found" })
   }
 
-  // find the index of the item to update
-  const idx = tasks.findIndex(t => t.id === req.params.id)
-  if (idx === -1) {
-    return res.status(404).json({ error: 'Task not found' })
+  // destructure the request
+  const { title, completed = false, priority = null } = req.body ?? {}
+  if (!title) {
+    return res.status(400).json({ error: 'Task title is required' })
   }
 
-  // update the task
-  tasks[idx] = { ...req.body, id: req.params.id }
+  // perform query
+  const { rows } = await pool.query(
+    `UPDATE tasks SET title = $1, completed = $2, priority = $3 WHERE id = $4 RETURNING *`,
+    [title, completed, priority, id]
+  )
 
-  // send the updated task
-  res.json(tasks[idx])
+  // check the update worked
+  if (rows.length === 0) {
+    return res.status(404).json({ error: "Task not found" })
+  }
+
+  // return result
+  res.json(rows[0])  
 })
 
 /*
   DELETE /api/resources/:id
   deletes an existing task by id
 */
-router.delete('/:id', (req, res) => {
-  // find it
-  const idx = tasks.findIndex(t => t.id === req.params.id)
-  if (idx === -1) {
-    return res.status(404).json({ error: 'Task not found' })
+router.delete('/:id', async (req, res) => {
+  // get id and check
+  const id = parseId(req.params.id)
+  if (!id) {
+    return res.status(404).json({ error: "Task not found" })
   }
 
-  // delete only the 1 item using its index
-  const [deleted] = tasks.splice(idx, 1)
-  res.json(deleted)
+  // delete by PK
+  const { rows } = await pool.query(
+    `DELETE FROM tasks WHERE id = $1 RETURNING *`,
+    [id]
+  )
+
+  // check the result
+  if (rows.length === 0) {
+    return res.status(404).json({ error: "Task not found" })
+  }
+
+  res.json(rows[0])
 })
 
 export default router
