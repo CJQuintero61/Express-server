@@ -1,0 +1,52 @@
+# rest_client_test.http
+#
+# requires the REST Client extension:
+# https://marketplace.visualstudio.com/items?itemName=humao.rest-client
+# 
+# This script is to test the db, backend, and api code to ensure
+# everything works properly
+
+@baseUrl = http://localhost:3000/api/resources
+
+### test get all tasks (expected 200)
+GET {{baseUrl}}/
+
+### test get specific task (expected 200)
+GET {{baseUrl}}/1
+
+### test add task (expected 201)
+POST {{baseUrl}}/
+Content-Type: application/json
+
+{
+    "title": "test POST requests with REST Client",
+    "completed": true,
+    "priority": "high"
+}
+
+### replace a task (expected 200)
+PUT {{baseUrl}}/3
+Content-Type: application/json
+
+{
+    "title": "this task was replaced by a PUT request",
+    "completed": true,
+    "priority": "high"
+}
+
+### delete a task (expected 200 or 404 if sent twice)
+DELETE {{baseUrl}}/2
+
+### test missing title (expected 400)
+POST {{baseUrl}}/
+Content-Type: application/json
+
+{
+  "priority": "low"
+}
+
+### invalid id (expected 404)
+GET {{baseUrl}}/abc
+
+### id that doesn't exist (expected 404)
+GET {{baseUrl}}/9999

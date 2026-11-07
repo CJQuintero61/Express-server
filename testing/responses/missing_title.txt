@@ -1,0 +1,11 @@
+HTTP/1.1 400 Bad Request
+X-Powered-By: Express
+Content-Type: application/json; charset=utf-8
+Content-Length: 34
+ETag: W/"22-70LMctOaA9tYGGlB3eUQJO70lUk"
+Date: Sat, 07 Nov 2026 20:20:56 GMT
+Connection: close
+
+{
+  "error": "Task title is required"
+}

@@ -18,7 +18,11 @@ Requires
    4. from the servers list, go to `express-assignment/databases/express-server-assignment/schemas/public/tables` to see the tables that exist in the db
    5. use the query tool to read table data if needed
 5. run the development server `npm run dev`
-6. go to `http://localhost:3000/` to verify the server is working
-   1. `http://localhost:3000/api/resources/` to see all tasks currently in db
-   2. `http://localhost:3000/api/resources/1` to see a specific task, simply replace '1' with any task id
-7. remove the volume with `docker compose down --volumes`
+6. remove the volume with `docker compose down --volumes` when done
+   1. Warning, destroying the volume will require you to re-init the db to create the tasks table
+
+To test data persistence:
+
+1. after building the container and initiallizing the db, close the Node server `Ctrl + C`
+2. restart server `npm run dev`
+3. read all data previously stored `http://localhost:3000/api/resources/`
