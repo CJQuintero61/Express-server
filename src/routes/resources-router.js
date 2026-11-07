@@ -4,33 +4,44 @@
   the router for all /api/resources endpoints
 */
 import { Router } from 'express'
-import { randomUUID } from 'crypto' // for random ID generation
+import { pool } from '../db/index.js'
 
 const router = Router()
 
 /*
   GET /api/resources/
-  returns all items currently in the array
+  returns all items currently in the tasks table
 */
-router.get('/', (req, res) => {
-  res.json(tasks)
+router.get('/', async (req, res) => {
+  // fetch
+  const { rows } = await pool.query(`
+    SELECT * FROM tasks ORDER BY id ASC
+  `)
+
+  // send response
+  res.json(rows)
 })
 
 /*
   GET /api/resources/:id
   returns a specific item by id, or 404 if not found
 */
-router.get('/:id', (req, res) => {
-  // find the task that matches id with one in the array
-  const task = tasks.find(t => t.id === req.params.id)
+router.get('/:id', async (req, res) => {
+  // get the id field from the quest
+  const id = req.params.id
+
+  // fetch
+  const { rows } = await pool.query(
+    `SELECT * FROM tasks WHERE id = $1`, [id]
+  )
 
   // check if not found
-  if (!task) {
+  if (rows.length === 0) {
     return res.status(404).json({ error: 'Task not found' })
   }
 
-  // return the json response
-  res.json(task)
+  // return the json response for the specific task
+  res.json(rows[0])
 })
 
 /*

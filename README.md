@@ -19,4 +19,6 @@ Requires
    5. use the query tool to read table data if needed
 5. run the development server `npm run dev`
 6. go to `http://localhost:3000/` to verify the server is working
+   1. `http://localhost:3000/api/resources/` to see all tasks currently in db
+   2. `http://localhost:3000/api/resources/1` to see a specific task, simply replace '1' with any task id
 7. remove the volume with `docker compose down --volumes`
